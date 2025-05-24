@@ -21,3 +21,4 @@ CREATE TABLE Userlist (
 
 
 -- insert into Userlist(UserName,Email,password,RollId) values('Prince','princejebastin27@gmail.com','Prince@1234',1)
+

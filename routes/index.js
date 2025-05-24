@@ -70,7 +70,9 @@ router.post('/login', async function (req, res, next) {
   try {
     const sql = "select * from Userlist where password = '" + password + "' and email = '" + Email + "';"
     const user = await connection.query(sql);
-    if (!user.rows) return res.status(404).json({ message: 'User not found' });
+    console.log(user);
+    
+    if (user.rows.length === 0) return res.status(404).json({ message: 'User not found' });
     const token = jwt.sign({ Email: user.rows[0].email, password: user.rows[0].password }, process.env.JWT_SECRET);
     const sqlquery = "Update UserList Set AccessToken = '" + token + "' where password = '" + password + "' and email = '" + Email + "';"
     console.log(sqlquery);
