@@ -28,9 +28,7 @@ router.post('/verifyToken', async function (req, res, next) {
   const authHeader = req.headers['authorization'];
   if (!authHeader) return res.status(401).json({ valid: false, message: 'No token provided' });
   const token = authHeader.split(' ')[1];
-  const validtoken = await connection.query("select * from Userlist where AccessToken='" + token +"';");
-  console.log(validtoken.rows.length);
-  
+  const validtoken = await connection.query("select * from Userlist where AccessToken='" + token +"';");  
   if(validtoken.rows.length === 0) {
     return res.status(401).json({ valid: false, message: 'Token Expired' });
   }else{
@@ -70,12 +68,10 @@ router.post('/login', async function (req, res, next) {
   try {
     const sql = "select * from Userlist where password = '" + password + "' and email = '" + Email + "';"
     const user = await connection.query(sql);
-    console.log(user);
-    
+  
     if (user.rows.length === 0) return res.status(404).json({ message: 'User not found' });
     const token = jwt.sign({ Email: user.rows[0].email, password: user.rows[0].password }, process.env.JWT_SECRET);
     const sqlquery = "Update UserList Set AccessToken = '" + token + "' where password = '" + password + "' and email = '" + Email + "';"
-    console.log(sqlquery);
 
     const update = await connection.query(sqlquery)
 
@@ -91,7 +87,6 @@ router.get('/get', verifyToken, async function (req, res, next) {
     const responce = await connection.query('select * from Roles;');
     res.json(responce.rows)
   } catch (err) {
-    console.error('Connection error:', err.stack);
     res.json(err.message)
   }
 });
